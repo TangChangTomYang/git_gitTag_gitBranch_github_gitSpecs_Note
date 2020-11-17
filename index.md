@@ -1,4 +1,351 @@
-#   一、git 的基本使用
+# 一、git 常用命令回顾
+
+
+
+![Snip20200129_4](images/Snip20200129_4.png) 
+
+
+
+- `git init` : 初始化 git 本地仓库
+- `git add . `: 将工作去编写的代码提交奥暂缓区
+- `git commit -m '提交信息'` : 将暂缓区的代码提交到本地指定的分支(master分支)
+- `git status` : 查看当前工作区和暂缓区中代码提交的状态
+  - 显示红色字体描述的内容是在工作区, 尚未提交到本地暂缓区中的内容
+  - 显示绿色字体描述的内容是已经从工作去提交到暂缓区, 但是尚未提交到本地分支(master分支)中的内容
+  - 如果没有红色和绿色表示全部的代码已经提交到了本地分支(master分支)
+- `git remote` : 查看当前git本地仓库关联的远程仓库地址
+  - 如果有内容就是说明当前本地仓库有关联远程仓库
+  - 如果没有内容, 说明没有关联任何远程仓库地址
+
+> 如果 不知道某个git 命令的用法, 就在命令后面添加 `--help` 查看对应的命令帮助
+>
+> eg:
+>
+> git remote --help , 查看 git remote 命令的帮助信息
+>
+> git add --help , 查看 git add 命令的帮助信息
+
+- `git remote add origin https://github.com/TangChangTomYang/git-usage-note.git`
+  - 上面这个命令, 表示给本地git仓库添加一个远程的仓库地址
+  - 其中 `origin` 是给远程仓库地址取的名字
+  - 其中`https://github.com/TangChangTomYang/git-usage-note.git` 表示的是远程仓库的具体地址
+- `git push origin master`
+  - 上面这条命令的意思是将git 仓库中已经 `commit` 的内容提交到名为 `origin` 这个远程地址对应的远程仓库的 `master` 分支中
+  - `origin` 是远程仓库的地址名字
+  - `master` 是远程仓库待提交的分支名
+- `git tag`: 查看当前本地仓库的标签情况
+- `git tag -a '0.0.1' -m '标签描述信息'` 
+  - 上面的命令是给当前的本地仓库打一个标签, `-a 0.0.1` 是指定当前打的标签的版本信息, `-m '标签描述信息'` 是对当前打的标签的一个简短描述
+- `git tag '0.0.3'` : 这个本地打标签的一种简写方式, 与`git tag -a '0.0.1' -m '标签描述信息'` 相比 没有了版本的描述信息.
+- `git push --tags` : 将当前所有的本地标签, 提交到远程仓库
+- `git push origin 0.0.2` : 提交具体的某个标签到git 远程仓库
+  - `git push --tags` 与 `git push origin 0.0.2` 的主要区别就是, 前面是提交所有的已经打的标签, 后面的命令只提交具体版本的标签
+- `git tag -d '0.0.1'` : 删除本地仓库指定的标签
+  - 如果只是删除了本地的标签, 远程没有删除, 可以使用 `git pull` 把本地删除的表现拉下来, 就又有了
+- `git push origin :'0.0.1'` : 删除远程指定版本的标签
+  - 通过 `git push origin :0.0.1` 删除了远程的标签, 可以再使用`git push --tags` 在将本地的标签添加到远程的仓库里面
+- `git log` : 查看git 提交的log 版本信息
+
+
+
+
+
+# 二、git 添加公私钥
+
+
+
+- 在mac 电脑中, 用户目录下有个 `.ssh` 隐藏目录是专门用来存储 公私钥等信息的
+
+- 在mac上生成rsa 公私钥命令
+
+  ```
+  ssh-keygen   // 一顿回车出现一个图像就ok了
+  ```
+
+  > 当使用命令 `ssh-keygen` 在mac 上创建完成 rsa 的公私钥后会在
+  >
+  > 用户目录下的 `.ssh` 隐藏目录下自动生成2个文件: `id_rsa` 和 `id_rsa.pub`
+  >
+  > 其中`id_rsa` 文件中存储的是rsa密钥对的私钥
+  >
+  > `id_rsa.pub` 是rsa密钥对的公钥, 在使用到rsa非对称加密的时候, 通常只需要把公钥给外面就可以了(使用xcode 打开, 拷贝内容给外部即可), 私钥自己保管
+
+- 我们在git上使用 rsa 免密登录时, 只要操作步骤如下:
+
+  - 1. 使用命令`ssh-keygen` 生成rsa公私钥对
+    2. 在用户目录下的`.ssh` 目录下找到公钥`id_rsa.pub` 文件, 将其内容原封不动拷贝粘贴到git中一个存储公钥的内容, 添加保存,基本任务就完成了. 
+
+
+
+# 三、Git基础
+
+
+
+## 1、版本管理
+
+### 1、什么是版本管理
+
+版本管理是一种记录文件变化的方式，以便将来查阅特定版本的文件内容。
+
+![](images/assets01.png)
+
+### 2、人为维护文档版本的问题
+
+1. 文档数量多且命名不清晰导致文档版本混乱
+
+2. 每次编辑文档需要复制，不方便
+
+3. 多人同时编辑同一个文档，容易产生覆盖
+
+
+
+
+![](images/assets04.png)
+
+
+
+## 2、Git 是什么
+
+Git是一个版本管理控制系统（缩写VCS），它可以在任何时间点，将文档的状态作为更新记录保存起来，也可以在任何时间点，将更新记录恢复回来。
+
+
+
+![](images/assets19.png)
+
+## 3、Git 安装
+
+[下载地址](https://git-scm.com/downloads) 
+
+在安装的过程中，所有选项使用默认值即可。
+
+
+
+## 4、Git 基本工作流程
+
+| git仓库          | 暂存区             | 工作目录            |
+| ---------------- | ------------------ | ------------------- |
+| 用于存放提交记录 | 临时存放被修改文件 | 被Git管理的项目目录 |
+
+![](images/assets05.png)
+
+## 5、Git 的使用
+
+### 1、Git 使用前配置
+
+在使用 git 前，需要告诉 git 你是谁，在向 git 仓库中提交时需要用到。
+
+1. 配置提交人姓名：`git config --global user.name 提交人姓名`
+2. 配置提交人姓名：`git config --global user.email 提交人邮箱` 
+3. 查看git配置信息：`git config --list`   
+
+**注意**
+
+1. 如果要对配置信息进行修改，重复上述命令即可。
+
+2. 配置只需要执行一次。
+
+### 2、提交步骤
+
+1. `git init` 初始化git仓库
+2. `git status` 查看文件状态
+3. `git add 文件列表` 追踪文件
+4. `git commit -m 提交信息`  向仓库中提交代码
+5. `git log` 查看提交记录
+
+### 3、撤销
+
+- 用暂存区中的文件覆盖工作目录中的文件： `git checkout 文件`
+
+- 将文件从暂存区中删除： `git rm --cached 文件`
+- 将 git 仓库中指定的更新记录恢复出来，并且覆盖暂存区和工作目录：`git rest --hard commitID` 
+
+![](images/assets07.png)
+
+# 四、Git进阶
+
+
+
+## 1、分支
+
+为了便于理解，大家暂时可以认为分支就是当前工作目录中代码的一份副本。
+
+使用分支，可以让我们从开发主线上分离出来，以免影响开发主线。
+
+![](images/assets08.png)
+
+
+
+### 1、分支细分
+
+1. 主分支（master）：第一次向 git 仓库中提交更新记录时自动产生的一个分支。
+
+   
+
+   ![](images/assets06.png)
+
+   
+
+2. 、开发分支（develop）：作为开发的分支，基于 master 分支创建。
+
+   
+
+   ![](images/assets09.png)
+
+3. 功能分支（feature）：作为开发具体功能的分支，基于开发分支创建
+
+   
+
+   ![](images/assets10.png)
+
+**功能分支 -> 开发分支 -> 主分支**
+
+### 2、分支命令
+
+- `git branch` 查看分支
+
+- `git branch 分支名称` 创建分支
+
+- `git checkout 分支名称` 切换分支
+
+- `git merge 来源分支` 合并分支
+
+- `git branch -d 分支名称` 删除分支（分支被合并后才允许删除）（-D 强制删除）
+
+
+## 2、暂时保存更改
+
+在git中，可以暂时提取分支上所有的改动并存储，让开发人员得到一个干净的工作副本，临时转向其他工作。
+
+使用场景：分支临时切换
+
+- 存储临时改动：`git stash`
+- 恢复改动：`git stash pop`
+
+# 五、Github
+
+在版本控制系统中，大约90%的操作都是在本地仓库中进行的：暂存，提交，查看状态或者历史记录等等。除此之外，如果仅仅只有你一个人在这个项目里工作，你永远没有机会需要设置一个远程仓库。
+
+只有当你需要和你的开发团队共享数据时，设置一个远程仓库才有意义。你可以把它想象成一个 “文件管理服务器”，利用这个服务器可以与开发团队的其他成员进行数据交换。
+
+## 1、注册
+
+1. 访问[github](https://github.com/)首页，点击 Sign up 连接。（注册）
+
+   ![](images/assets11.png)
+
+2. 填写用户名、邮箱地址、GitHub登陆密码
+
+   ![](images/assets12.png)
+
+3. 选择计划
+
+   ![](images/assets13.png)
+
+4. 填写 GitHub 问题
+
+   ![](images/assets14.png)
+
+5. 验证邮箱
+
+   ![](images/assets15.png)
+
+6. GitHub 个人中心
+
+   ![](images/assets16.png)
+
+
+
+## 2、多人协作开发流程
+
+- A在自己的计算机中创建本地仓库
+- A在github中创建远程仓库
+- A将本地仓库推送到远程仓库
+- B克隆远程仓库到本地进行开发
+- B将本地仓库中开发的内容推送到远程仓库
+- A将远程仓库中的最新内容拉去到本地
+
+![](images/assets20.png)
+
+
+
+![](images/assets21.png)
+
+## 3、创建仓库
+
+1. 填写仓库基本信息
+
+   ![](images/assets17.png)
+
+2. 将本地仓库推送到远程仓库
+
+   ![](images/assets18.png)
+
+   1. git push 远程仓库地址 分支名称
+
+   2. git push 远程仓库地址别名 分支名称
+
+   3. git push -u 远程仓库地址别名 分支名称
+
+       -u 记住推送地址及分支，下次推送只需要输入git push即可
+
+   4. git remote add 远程仓库地址别名 远程仓库地址
+
+## 4、拉取操作
+
+### 1、克隆仓库
+
+克隆远端数据仓库到本地：`git clone 仓库地址`
+
+### 2、拉取远程仓库中最新的版本
+
+拉取远程仓库中最新的版本：`git pull 远程仓库地址 分支名称`
+
+## 5、解决冲突
+
+在多人同时开发一个项目时，如果两个人修改了同一个文件的同一个地方，就会发生冲突。冲突需要人为解决。
+
+## 6、跨团队协作
+
+1. 程序员 C fork仓库
+2. 程序员 C 将仓库克隆在本地进行修改
+3. 程序员 C 将仓库推送到远程
+4. 程序员 C 发起pull reqest
+5. 原仓库作者审核
+6. 原仓库作者合并代码
+
+## 7、ssh免登陆
+
+https协议仓库地址：https://github.com/itcast-frontEnd/git-demo.git
+
+
+
+![](images/assets22.png)
+
+生成秘钥：`ssh-keygen`
+
+秘钥存储目录：C:\Users\用户\\.ssh
+
+公钥名称：id_rsa.pub
+
+私钥名称：id_rsa
+
+![](images/assets23.png)
+
+![](images/assets24.png)
+
+## 8、GIT忽略清单
+
+将不需要被git管理的文件名字添加到此文件中，在执行git命令的时候，git就会忽略这些文件。
+
+git忽略清单文件名称：**.gitignore**
+
+将工作目录中的文件全部添加到暂存区：`git add .`
+
+
+
+
+
+# 六、git 的基本使用
 
 
 
@@ -260,7 +607,7 @@ git checkout 分支名  // 切换到指定的分支
 >
 >    git checkout develop // 表示的是从当前分支切换到 develop 分支
 >
->    ​
+>    
 >
 > 2. **在切换分支前,需要把当前分支中的代码提交到代码仓库, 否则会出现错误, 什么错误呢?** 
 >
@@ -328,7 +675,7 @@ git branch -D 分支名   // 强制删除分支
 
  
 
-#####1、 储存临时改动
+##### 1、 储存临时改动
 
 ```
 git stash  // stash 是藏匿的意思
@@ -371,7 +718,7 @@ git stash pop
 
 
 
-# 二、github 的基本使用
+# 七、github 的基本使用
 
 
 
@@ -523,7 +870,7 @@ git clone 远程仓库地址   // 将远程仓库, 克隆到本地电脑
 
 ## 6、程序员A 邀请程序员B成为当前项目的开发者
 
-![邀请github远程开发合作者](C:\Users\asus\Documents\003-git笔记\邀请github远程开发合作者.png)
+![邀请github远程开发合作者](images/邀请github远程开发合作者.png)
 
 打开github, 进入对应项目的远程仓库, --->  settings  -->  Options --> Collaborators (合作者/写作者)
 
@@ -648,15 +995,15 @@ git push origin master
 
 有程序员A, 在github创建了一个仓库, 我们称为 codeA. 程序员B发现程序员A写的代码 codeA 有个地方不够好, 程序员B向把这个不好的地方修改了, 在把代码提交到程序员A 的codeA仓库中, 程序员B 要怎么做呢?  程序员A 也需要做点什么吗? 
 
-![fork github](C:\Users\asus\Documents\003-git笔记\fork github.png)
+![fork github](images/fork github.png)
 
 
 
-![commit pull](C:\Users\asus\Documents\003-git笔记\commit pull.png)
+![commit pull](images/commit pull.png)
 
 
 
-![原作者github仓库页面](C:\Users\asus\Documents\003-git笔记\原作者github仓库页面.png)
+![原作者github仓库页面](images/原作者github仓库页面.png)
 
 因为程序员B 不是程序员A 的codeA仓库的协作开发者, 因此程序员B不能直接将codeA 远程仓库克隆下来修改后直接提交, 程序员B需要这样做:
 
@@ -732,32 +1079,215 @@ test/tx.html
 
 
 
+# 八、cocoapods 远程私有库的实现步骤
+
+
+
+## 1、创建远程私有索引库
+
+> - 就是在自己的 git 服务器上创建一个git仓库, 专门用来存储自己的私有库的 `xxx.podspec`  描述文件的
+>
+> - 创建远程私有索引库和创建其它的git远程仓库是一样的.一般的远程git仓库是用来存储我们编写的代码的, 而远程私有索引仓库仅仅是用来存储我们私有库的描述文件 `xxx.podspec` 的
+> - 简单的说, 远程私有索引库, 就是我们在远程的git仓库上创建的一个git仓库, 只是这个仓库只存储 `xxx.podspec` 描述文件
+
+2. 在本地电脑添加 本地私有索引库
+
+   ```
+   // YRBase 是远程私有索引库的名字
+   // url 是远程私有索引库YRBase对应的url 地址
+   pod repo add YRBase url 
+   ```
+
+   > 添加的远程私有索引库, 需要和当前电脑使用 ssh 连接
+
+   
+
+3. 在本地创建 私有代码库的模板库
+
+   ```
+   // pod lib create 是固定写法
+   // YRBaseToolLib 是私有库的名字, 执行命令后会根据这个名字创建一个xcode工程 以及 git本地仓库, 以及帮助我们自动生生 podfile , YRBaseToolLib.podspec 等配置文件
+   pod lib create YRBaseToolLib
+   ```
+
+
+
+4. 将核心代码拖入到 `YRBaseToolLib` 下的Classes目录下即可
+
+5. pod intall 安装 YRBaseToolLib库中的classes 中的代码到模板库测试工程中, 进行测试即可
+
+6. 编写描述文件基本信息
+
+   - 如果不会写可以在cocospods 上找一个 `xxx.podspec`  文件, 参看修改即可
+   - 编写`xxx.podspec` 描述文件的重点是, source 和版本信息 等
+
+7. 将私有代码模板库全部提交到git仓库,并打tag
+
+   ```
+   git add . 
+   git commit -m '提交信息'
+   git remote 
+   git remote add origin url
+   git push origin master
+   git tag
+   git tag -a '1.0.0' -m '初始化xxx 库'
+   git push --tags 
+   ```
+
+8. 检查本地的 spec 文件编写否合法
+
+   ```
+   pod lib lint
+   ```
+
+9. 检查远程私有索引库的 spec 编写是否合法
+
+   ```
+   pod spec lint
+   ```
+
+10. 向私有索引库提交新编写的 远程私有库的spec描述文件
+
+    ```
+    // pod repo push 是固定写法
+    // YRBase 私有索引库的名字
+    // xxx.podspec 要向私有索引库YRBase 提交的 spec 描述文件
+    pod repo push YRBase xxx.podspec
+    ```
+
+    > 注意:
+    >
+    > 在执行此步骤时, 需要在 远程私有代码模板仓库目录
+
+11. 在编写`podfile` 时需要注意:
+
+    - 如果需要使用**cocoapods** 安装带有, 私有索引库中的库文件时, 编写的**podfile** 文件需要在前面明确的指明, 如下示例:
+
+    ```
+    source '官方索引库路径'
+    source '私有索引库路径'
+    
+    use_frameworks!
+    platform :ios, '8.0'
+    
+    target 'abcLib_Example' do
+      pod 'abcLib'
+     
+    end
+    ```
+
+    > 如果不知道当前的官方索引库和私有索引库的地址, 可以使用命令 `pod repo` 在终端上查到.
 
 
 
 
 
+# 九、根据podfile安装指定的第三方库
+
+
+
+- `pod install` : 根据 `podfile.lock` 文件 中的描述版本信息安装 第三方库
+
+  > 在以前的旧版本中使用 `pod install ` 命令是会自动更新本地的版本索引库
+  >
+  > 如果在使用 `pod install` 时不希望更新版本索引库可以在候命使用`--no-repo-update`
+  >
+  > 新版的cocoapods 好像改了, 如果不清楚可以使用 命令 `pod --help` 或者`pod install --help` 查看对应的命令帮助.
+  >
+  > 新版的cocoapods 好像使用`pod install` 不会更新本地的索引库了, 使用`pod install --repo-update` 才会更新.
+
+- `pod update` :  根据`podfile` 文件中的描述版本信息安装第三方库, 并更新 `podfile.lock` 文件的内容
+
+  > 以前是使用 `pod install` 时会自动更新本地索引库, 现在是使用`pod update` 时会自动更行本地索引, 如果使用 `pod update ` 是不需要自动更新, 需要使用新的命名`pod update --no-repo-update` 
+
+  
+
+# 十、git切换到指定远程分支
+
+
+
+我们在使用git进行开发的时候经常会遇到需要切换远程分支并且提交到远程指定分支的情况，现在记录下操作步骤。
+
+
+
+- **查看远程所有分支** 
+
+```
+git branch -a
+```
+
+`git branch`不带参数,列出本地已经存在的分支，并且在当前分支的前面用`*`标记，加上`-a`参数可以查看所有分支列表，包括本地和远程，远程分支一般会用红色字体标记出来
+
+![brancha](images/brancha.png) 
 
 
 
 
 
+- **新建分支并切换到指定分支** 
+
+```
+git checkout -b dev origin/release/caigou_v1.0
+```
+
+> git checkout -b 本地分支名 origin/远程分支名
+>
+> 本地仓库在切换到远程分支时, 可能会报错, 直接按照终端提示操作你可
+
+该命令可以将远程`git`仓库里的指定分支拉取到本地，这样就在本地新建了一个`dev`分支，并和指定的远程分支`release/caigou_v1.0`关联了起来。
+
+```
+Switched to a new branch 'dev'
+Branch 'dev' set up to track remote branch 'release/caigou_v1.0' from 'origin'.
+```
+
+
+
+- **查看本地分支及追踪的分支**
+
+```
+git branch -vv
+```
+
+`git branch -vv`命令可以显示本地所有分支，执行结果如下：
+
+```
+* dev    e67e3ef [origin/release/caigou_v1.0] 供应商详情页面
+ master 11160c2 [origin/master: behind 5] Merge branch 'master' of https://git.jointforce.com/scm/join/yj-stat 
+```
+
+`*`表示当前所在分支，[远程分支]表示当前本地分支追踪的远程分支，最后一个是最近一次提交的注释。
 
 
 
 
 
+- **将本地分支推送到远程**
 
+```
+git push -u origin dev:release/caigou_v1.0
+```
 
+> git push <远程主机名> <本地分支名>:<远程分支名>
 
+成功后显示如下：
 
+```
+Counting objects: 8, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (8/8), 754 bytes | 754.00 KiB/s, done.
+Total 8 (delta 6), reused 0 (delta 0)
+remote:
+remote: Create pull request for release/caigou_v1.0:
+remote:   https://git.jointforce.com/projects/JOIN/repos/yj-stat/compare/commits?sourceBranch=refs/heads/release/caigou_v1.0
+remote:
+To https://git.jointforce.com/scm/join/yj-stat.git
+   a22ed65..e8782b2  dev -> release/caigou_v1.0
+Branch 'dev' set up to track remote branch 'release/caigou_v1.0' from 'origin'. 
+```
 
-
-
-
-
-
-
+上述命令表示将本地`dev`分支推送到远程`release/caigou_v1.0`分支。
 
 
 
